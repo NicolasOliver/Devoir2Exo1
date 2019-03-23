@@ -12,7 +12,9 @@ public class Crawler {
     private static ArrayList<Monster> listMonsters = new ArrayList<Monster>();
 
     public static void main(String[] args) throws IOException {
-        findMonsters(URL);
+        //findMonsters(URL);
+        //findMonster("http://legacy.aonprd.com/bestiary5/anemos.html#anemos");
+        findMonster("http://legacy.aonprd.com/bestiary5/demons.html#demon-seraptis");
     }
 
     public static void findMonsters(String url) throws IOException {
@@ -32,7 +34,21 @@ public class Crawler {
         }
     }
 
-    private static ArrayList<Monster> findMonster(String url_monster) {
-        return listMonsters;
+    private static ArrayList<Monster> findMonster(String url_monster) throws IOException {
+        Document doc = Jsoup.connect(url_monster).get();
+        Elements content = doc.getElementsByClass("body");
+        ArrayList<Monster> monstersList = new ArrayList<Monster>();
+
+        System.out.println(content.eachAttr("monster-header"));
+       /* Elements name = doc.getElementsByClass("stat-block-title");
+        Monster m = new Monster(name.html().split(" ")[0]); */
+
+        if(content != null && content.contains("/spells/")) {
+            monstersList = new ArrayList<Monster>();
+            Monster m = null;
+            ArrayList<String> spellsList = new ArrayList<String>();
+
+        }
+        return monstersList;
     }
 }
