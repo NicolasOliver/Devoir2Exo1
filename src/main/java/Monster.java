@@ -28,6 +28,19 @@ public class Monster {
         this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return "Monster{" +
+                "name='" + name + '\'' +
+                ", spells=" + spells +
+                ", level=" + level +
+                ", description='" + description + '\'' +
+                '}';
+    }
+
+    public Monster() {
+    }
+
     public String getName() {
         return name;
     }
