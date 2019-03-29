@@ -13,10 +13,8 @@ public class Crawler {
 
     public static void main(String[] args) throws IOException {
         findMonsters(URL);
-        //findMonster("http://legacy.aonprd.com/bestiary2/agathion.html#agathion");
-        //findMonster("http://legacy.aonprd.com/bestiary2/daemon.html#daemon");
-        //findMonster("http://legacy.aonprd.com/bestiary2/demon.html");
-
+        //findMonster("http://legacy.aonprd.com/bestiary2/angel.html#angel,-monadic-deva");
+        //findMonster("http://legacy.aonprd.com/bestiary2/giant.html");
     }
 
     public static void findMonsters(String url) throws IOException {
@@ -37,23 +35,30 @@ public class Crawler {
 
     private static void findMonster(String url_monster) throws IOException {
         Document doc = Jsoup.connect("http://legacy.aonprd.com/bestiary2/"+url_monster).get();
+        //Document doc = Jsoup.connect(url_monster).get();
         Elements content = doc.getElementsByClass("body");
 
         Elements elements = content.select("div");
-        // Supprime des divs inutiles
+        Element save = elements.first();
         elements.remove(0);
-        elements.remove(elements.size()-1);
-        //
+
+        // Selon la structure de la page, il peut être nécessaire de faire cette opération
+        if(elements.size() == 0) {
+            elements.add(save);
+            for(Element e : elements.nextAll().select("div")) {
+                elements.add(e);
+            }
+        }
+
         for (Element e : elements) {
-            String[] name = e.getElementsByClass("stat-block-title").text().split(" ");
-            if(ifExist(name[0])) {
-                System.out.println("Monstre déjà enregistré");
+            String name = e.getElementsByClass("monster-header").text();
+            if(ifExist(name)) {
             }
             else {
-                if(name[0].length()!=0) {
+                if(name.length()!=0) {
                     Monster m = new Monster();
                     ArrayList<String> spellsList = new ArrayList<String>();
-                    m.setName(name[0]);
+                    m.setName(name);
                     Elements spells = e.getElementsByAttributeValueContaining("href","/spells/");
                     for(Element spell : spells) {
                         spellsList.add(spell.text());
